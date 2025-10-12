@@ -1,10 +1,97 @@
-import React from "react";
+import React, { useEffect } from "react";
 import "./App.css";
 
 function App() {
+  useEffect(() => {
+    const initCalculator = () => {
+      const productSelect = document.getElementById('product');
+      const quantityInput = document.getElementById('quantity');
+      const calculateBtn = document.getElementById('calculate-btn');
+      const totalCostElement = document.getElementById('total-cost');
+      const quantityError = document.getElementById('quantity-error');
+      
+      if (!productSelect || !quantityInput || !calculateBtn || !totalCostElement) {
+        console.log('Элементы калькулятора не найдены');
+        return;
+      }
+      
+      const numbersRegex = /^\d+$/;
+      
+      const validateQuantityInput = () => {
+        const quantityValue = quantityInput.value.trim();
+        
+        if (quantityValue === '') {
+          quantityError.classList.remove('show');
+          quantityInput.style.borderColor = '#2f66b3';
+          return;
+        }
+        
+        if (!numbersRegex.test(quantityValue)) {
+          quantityError.textContent = 'Пожалуйста, введите только цифры';
+          quantityError.classList.add('show');
+          quantityInput.style.borderColor = '#d32f2f';
+        } else {
+          quantityError.classList.remove('show');
+          quantityInput.style.borderColor = '#2f66b3';
+        }
+      };
+      
+      const calculateTotalCost = () => {
+        const selectedProduct = productSelect.value;
+        const quantityValue = quantityInput.value.trim();
+        
+        if (selectedProduct === '') {
+          alert('Пожалуйста, выберите товар');
+          return;
+        }
+        
+        if (quantityValue === '') {
+          alert('Пожалуйста, введите количество товара');
+          quantityInput.focus();
+          return;
+        }
+        
+        if (!numbersRegex.test(quantityValue)) {
+          alert('Пожалуйста, введите корректное количество (только цифры)');
+          quantityInput.focus();
+          return;
+        }
+        
+        const quantity = parseInt(quantityValue, 10);
+        if (quantity <= 0) {
+          alert('Количество товара должно быть больше 0');
+          quantityInput.focus();
+          return;
+        }
+        
+        const price = parseInt(selectedProduct, 10);
+        const totalCost = price * quantity;
+        
+        totalCostElement.textContent = `${totalCost.toLocaleString('ru-RU')} руб.`;
+        
+        totalCostElement.style.transform = 'scale(1.05)';
+        setTimeout(() => {
+          totalCostElement.style.transform = 'scale(1)';
+        }, 200);
+      };
+      
+      calculateBtn.addEventListener('click', calculateTotalCost);
+      quantityInput.addEventListener('input', validateQuantityInput);
+      
+      console.log('Калькулятор инициализирован');
+    };
+
+    const timer = setTimeout(initCalculator, 100);
+    
+    return () => {
+      clearTimeout(timer);
+    };
+  }, []);
+
   return (
     <div>
-      {/* Шапка сайта */}
+      {}
+      {}
       <header id="site-header">
         <div className="container">
           <div className="header-content">
@@ -22,6 +109,7 @@ function App() {
             <ul>
               <li><a href="#table-section">Таблица</a></li>
               <li><a href="#forma">Форма</a></li>
+              <li><a href="#calculator">Калькулятор</a></li>
               <li><a href="#main">Главная</a></li>
             </ul>
           </nav>
@@ -74,20 +162,20 @@ function App() {
           </p>
           <ul>
             <li><a href="https://github.com/Youminava">На фрагмент стороннего сайта</a></li>
-            <li>
-              ссылки из областей картинки (map):<br />
-              <img
-                src="../public/map.svg"
-                alt="карта изображения"
-                width="320"
-                height="160"
-                useMap="#m"
-              />
-              <map name="m">
-                <area shape="rect" coords="20,20,140,80" href="https://kubsu.ru" alt="Переход на kubsu.ru" />
-                <area shape="circle" coords="230,80,36" href="https://developer.mozilla.org/" alt="Переход на MDN" />
-              </map>
-            </li>
+           <li>
+  ссылки из областей картинки (map):<br />
+  <img
+  src="/map.svg"  // Теперь правильный путь
+  alt="карта изображения"
+  width="320"
+  height="160"
+  useMap="#m"
+/>
+<map name="m">
+  <area shape="rect" coords="20,20,140,80" href="https://kubsu.ru" alt="Переход на kubsu.ru" />
+  <area shape="circle" coords="230,80,36" href="https://developer.mozilla.org/" alt="Переход на MDN" />
+</map>
+</li>
             <li><a href="">Пустая ссылка</a></li>
             <li>Ссылка без href</li>
             <li><a href="https://kubsu.ru/" rel="nofollow">КубГУ (запрещен переход поисковикам)</a></li>
@@ -132,6 +220,44 @@ function App() {
               <tr><td colSpan="2">Общее количество студентов</td><td colSpan="3">4170</td></tr>
             </tbody>
           </table>
+        </section>
+
+        {/* Калькулятор стоимости заказа */}
+        <section id="calculator">
+          <h2>Калькулятор стоимости заказа</h2>
+          <div id="calculator-container">
+            <form id="order-form">
+              <div className="form-group">
+                <label htmlFor="product">Выберите товар:</label>
+                <select id="product" name="product" required>
+                  <option value="">-- Выберите товар --</option>
+                  <option value="1000">Ноутбук - 1000 руб.</option>
+                  <option value="500">Смартфон - 500 руб.</option>
+                  <option value="300">Наушники - 300 руб.</option>
+                  <option value="200">Клавиатура - 200 руб.</option>
+                </select>
+              </div>
+              
+              <div className="form-group">
+                <label htmlFor="quantity">Количество товара:</label>
+                <input 
+                  type="text" 
+                  id="quantity" 
+                  name="quantity" 
+                  placeholder="Введите количество"
+                  required
+                />
+                <div id="quantity-error" className="error-message"></div>
+              </div>
+              
+              <button type="button" id="calculate-btn">Рассчитать стоимость</button>
+              
+              <div className="form-group">
+                <label>Стоимость заказа:</label>
+                <div id="total-cost" className="total-cost">0 руб.</div>
+              </div>
+            </form>
+          </div>
         </section>
 
         {/* Форма */}
