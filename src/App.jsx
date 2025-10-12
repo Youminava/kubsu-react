@@ -1,5 +1,6 @@
 import React from "react";
 import "./App.css";
+
 function App() {
   return (
     <div>
@@ -17,7 +18,6 @@ function App() {
             </div>
             <h1 className="site-name">Кубанский государственный университет</h1>
           </div>
-
           <nav className="main-menu">
             <ul>
               <li><a href="#table-section">Таблица</a></li>
@@ -56,15 +56,12 @@ function App() {
             <li><a href="../higher.html">Относительная на главную страницу уровнем выше</a></li>
             <li><a href="../../higher2.html">Относительная двумя уровнями выше</a></li>
           </ul>
-
           <p>
-            Кубанский государственный университет является одним из ведущих вузов Юга России.
-            Более подробную информацию можно найти на{" "}
+            Кубанский государственный университет является одним из ведущих вузов Юга России. Более подробную информацию можно найти на{" "}
             <a href="https://kubsu.ru/ru/university" target="_blank" rel="noopener noreferrer">
               официальной странице университета
             </a>.
           </p>
-
           <p>
             Также рекомендуем ознакомиться с{" "}
             <a href="https://kubsu.ru/ru/education" target="_blank" rel="noopener noreferrer">
@@ -75,42 +72,21 @@ function App() {
               информацией для абитуриентов
             </a>.
           </p>
-
-<ul>
+          <ul>
             <li><a href="https://github.com/Youminava">На фрагмент стороннего сайта</a></li>
             <li>
-              ссылки из прямоугольных и круглых областей картинки:<br />
-              <div style={{ position: "relative", display: "inline-block" }}>
-                <img src="map.svg" alt="карта изображения" width="320" height="160" useMap="#m" />
-                <map name="m">
-                  <area shape="rect" coords="20,20,140,80" href="https://kubsu.ru" alt="КубГУ" />
-                  <area shape="circle" coords="230,80,36" href="https://github.com" alt="GitHub" />
-                </map>
-                <div
-                  style={{
-                    position: "absolute",
-                    top: "50px",
-                    left: "60px",
-                    color: "black",
-                    fontWeight: "bold",
-                    fontSize: "16px",
-                  }}
-                >
-                  КубГУ
-                </div>
-                <div
-                  style={{
-                    position: "absolute",
-                    top: "80px",
-                    left: "210px",
-                    color: "black",
-                    fontWeight: "bold",
-                    fontSize: "16px",
-                  }}
-                >
-                  github
-                </div>
-              </div>
+              ссылки из областей картинки (map):<br />
+              <img
+                src="../public/map.svg"
+                alt="карта изображения"
+                width="320"
+                height="160"
+                useMap="#m"
+              />
+              <map name="m">
+                <area shape="rect" coords="20,20,140,80" href="https://kubsu.ru" alt="Переход на kubsu.ru" />
+                <area shape="circle" coords="230,80,36" href="https://developer.mozilla.org/" alt="Переход на MDN" />
+              </map>
             </li>
             <li><a href="">Пустая ссылка</a></li>
             <li>Ссылка без href</li>
@@ -127,7 +103,6 @@ function App() {
             <li><a href="https://www.google.com/search?q=КубГУ&num=1&hl=ru" title="Поиск информации о КубГУ в Google с ограничением результатов">С тремя параметрами</a></li>
             <li><a href="https://www.kubsu.ru/ru/user/74030" title="Профиль создателя сайта на платформе КубГУ">С параметром id (Создатель сайта)</a></li>
           </ol>
-
           <li>
             <a href="ftp://username:password@ftp.example.com/path/to/file.txt">
               Ссылка на файл на FTP сервере
@@ -159,7 +134,7 @@ function App() {
           </table>
         </section>
 
-{/* Форма */}
+        {/* Форма */}
         <section id="forma">
           <h2>Форма регистрации</h2>
           <form>
@@ -167,22 +142,18 @@ function App() {
               Введите ваше ФИО:<br />
               <input name="field-name-1" placeholder="Фамилия Имя Отчество" />
             </label><br />
-
             <label>
               Ваш номер телефона:<br />
-              <input name="field-phone" placeholder="+7(___)___  " />
+              <input name="field-phone" placeholder="+7(___)___ " />
             </label><br />
-
             <label>
               Ваш email:<br />
               <input name="field-email" type="email" placeholder="example@gmail.com" />
             </label><br />
-
             <label>
               Ваша дата рождения:<br />
               <input name="field-date" defaultValue="2000-01-01" type="date" />
             </label><br />
-
             Ваш пол:<br />
             <label>
               <input type="radio" name="radio-group-1" value="Мужской" defaultChecked /> Мужской
@@ -190,7 +161,6 @@ function App() {
             <label>
               <input type="radio" name="radio-group-1" value="Женский" /> Женский
             </label><br />
-
             <label>
               Ваш любимый язык программирования:<br />
               <select name="field-name-4[]" multiple>
@@ -209,17 +179,14 @@ function App() {
                 <option value="Rust" selected>Rust</option>
               </select>
             </label><br />
-
             <label>
               Ваша биография:<br />
               <textarea name="field-name-2"></textarea>
             </label><br />
-
             Контракт:<br />
             <label>
               <input type="checkbox" name="check-1" defaultChecked /> С контрактом ознакомлен(a)
             </label><br />
-
             <input type="submit" value="Сохранить" />
           </form>
         </section>
