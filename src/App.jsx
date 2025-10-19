@@ -4,81 +4,172 @@ import "./App.css";
 function App() {
   useEffect(() => {
     const initCalculator = () => {
-      const productSelect = document.getElementById('product');
+      const serviceTypeRadios = document.querySelectorAll('input[name="service-type"]');
       const quantityInput = document.getElementById('quantity');
-      const calculateBtn = document.getElementById('calculate-btn');
+      const optionsGroup = document.getElementById('options-group');
+      const serviceOption = document.getElementById('service-option');
+      const propertiesGroup = document.getElementById('properties-group');
+      const serviceProperty = document.getElementById('service-property');
       const totalCostElement = document.getElementById('total-cost');
       const quantityError = document.getElementById('quantity-error');
-      
-      if (!productSelect || !quantityInput || !calculateBtn || !totalCostElement) {
+
+      if (!serviceTypeRadios.length || !quantityInput || !totalCostElement) {
         console.log('Элементы калькулятора не найдены');
         return;
       }
-      
-      const numbersRegex = /^\d+$/;
-      
+
+      const basePrices = {
+        basic: 1000,
+        premium: 2000,
+        custom: 1500
+      };
+
+      const optionModifiers = {
+        standard: 0,
+        advanced: 500,
+        professional: 1000
+      };
+
+      const propertyModifier = 300;
+
+      const updateDynamicFields = () => {
+  const selectedServiceType = getSelectedServiceType();
+  
+  if (serviceOption) serviceOption.value = 'standard';
+  if (serviceProperty) serviceProperty.checked = false;
+  
+  // Сначала скрываем все динамические поля
+  if (optionsGroup) optionsGroup.style.display = 'none';
+  if (propertiesGroup) propertiesGroup.style.display = 'none';
+  
+  // Показываем нужные поля в зависимости от типа услуги
+  switch(selectedServiceType) {
+    case 'basic':
+      // Оба поля остаются скрытыми
+      break;
+    case 'premium':
+      // Только селект опций
+      if (optionsGroup) optionsGroup.style.display = 'block';
+      break;
+    case 'custom':
+      // Только чекбокс свойства
+      if (propertiesGroup) propertiesGroup.style.display = 'block';
+      break;
+  }
+  
+  updateServiceDescriptions();
+};
+
+      const getSelectedServiceType = () => {
+        const selectedRadio = Array.from(serviceTypeRadios).find(radio => radio.checked);
+        return selectedRadio ? selectedRadio.value : 'basic';
+      };
+
       const validateQuantityInput = () => {
         const quantityValue = quantityInput.value.trim();
         
         if (quantityValue === '') {
-          quantityError.classList.remove('show');
+          if (quantityError) {
+            quantityError.classList.remove('show');
+          }
           quantityInput.style.borderColor = '#2f66b3';
-          return;
-        }
-        
-        if (!numbersRegex.test(quantityValue)) {
-          quantityError.textContent = 'Пожалуйста, введите только цифры';
-          quantityError.classList.add('show');
-          quantityInput.style.borderColor = '#d32f2f';
-        } else {
-          quantityError.classList.remove('show');
-          quantityInput.style.borderColor = '#2f66b3';
-        }
-      };
-      
-      const calculateTotalCost = () => {
-        const selectedProduct = productSelect.value;
-        const quantityValue = quantityInput.value.trim();
-        
-        if (selectedProduct === '') {
-          alert('Пожалуйста, выберите товар');
-          return;
-        }
-        
-        if (quantityValue === '') {
-          alert('Пожалуйста, введите количество товара');
-          quantityInput.focus();
-          return;
-        }
-        
-        if (!numbersRegex.test(quantityValue)) {
-          alert('Пожалуйста, введите корректное количество (только цифры)');
-          quantityInput.focus();
           return;
         }
         
         const quantity = parseInt(quantityValue, 10);
-        if (quantity <= 0) {
-          alert('Количество товара должно быть больше 0');
-          quantityInput.focus();
+        if (isNaN(quantity) || quantity <= 0 || quantity > 1000) {
+          if (quantityError) {
+            quantityError.textContent = 'Введите число от 1 до 1000';
+            quantityError.classList.add('show');
+          }
+          quantityInput.style.borderColor = '#d32f2f';
+        } else {
+          if (quantityError) {
+            quantityError.classList.remove('show');
+          }
+          quantityInput.style.borderColor = '#2f66b3';
+        }
+      };
+
+      const calculateTotalCost = () => {
+        const selectedServiceType = getSelectedServiceType();
+        const quantityValue = quantityInput.value.trim();
+        
+        if (quantityValue === '' || isNaN(parseInt(quantityValue, 10)) || parseInt(quantityValue, 10) <= 0) {
+          totalCostElement.textContent = '0 руб.';
           return;
         }
         
-        const price = parseInt(selectedProduct, 10);
-        const totalCost = price * quantity;
+        const quantity = parseInt(quantityValue, 10);
+        let totalCost = basePrices[selectedServiceType] * quantity;
+        
+        if (selectedServiceType === 'premium' && serviceOption) {
+          const optionValue = serviceOption.value;
+          totalCost += optionModifiers[optionValue] * quantity;
+        }
+        
+        if (selectedServiceType === 'custom' && serviceProperty && serviceProperty.checked) {
+          totalCost += propertyModifier * quantity;
+        }
         
         totalCostElement.textContent = `${totalCost.toLocaleString('ru-RU')} руб.`;
-        
-        totalCostElement.style.transform = 'scale(1.05)';
+        totalCostElement.classList.add('pulse');
         setTimeout(() => {
-          totalCostElement.style.transform = 'scale(1)';
-        }, 200);
+          totalCostElement.classList.remove('pulse');
+        }, 300);
       };
-      
-      calculateBtn.addEventListener('click', calculateTotalCost);
-      quantityInput.addEventListener('input', validateQuantityInput);
-      
-      console.log('Калькулятор инициализирован');
+
+      const updateServiceDescriptions = () => {
+        const selectedServiceType = getSelectedServiceType();
+        const descriptions = {
+          basic: 'Базовая услуга включает минимальный набор функций без дополнительных опций',
+          premium: 'Премиум услуга предоставляет расширенные возможности с выбором опций',
+          custom: 'Кастомная услуга позволяет настроить дополнительные свойства под ваши нужды'
+        };
+        
+        const descriptionElement = document.getElementById('service-description');
+        if (descriptionElement) {
+          descriptionElement.textContent = descriptions[selectedServiceType];
+        }
+      };
+
+      const initServiceDescriptions = () => {
+        const descriptionHtml = `
+          <div class="service-description" id="service-description">
+            Базовая услуга включает минимальный набор функций без дополнительных опций
+          </div>
+        `;
+        const radioGroup = document.querySelector('.radio-group');
+        if (radioGroup && !document.getElementById('service-description')) {
+          radioGroup.insertAdjacentHTML('afterend', descriptionHtml);
+        }
+      };
+
+      initServiceDescriptions();
+      updateDynamicFields();
+      calculateTotalCost();
+
+      serviceTypeRadios.forEach(radio => {
+        radio.addEventListener('change', function() {
+          updateDynamicFields();
+          calculateTotalCost();
+        });
+      });
+
+      quantityInput.addEventListener('input', function() {
+        validateQuantityInput();
+        calculateTotalCost();
+      });
+
+      if (serviceOption) {
+        serviceOption.addEventListener('change', calculateTotalCost);
+      }
+
+      if (serviceProperty) {
+        serviceProperty.addEventListener('change', calculateTotalCost);
+      }
+
+      console.log('Калькулятор стоимости услуги инициализирован');
     };
 
     const timer = setTimeout(initCalculator, 100);
@@ -90,8 +181,6 @@ function App() {
 
   return (
     <div>
-      {}
-      {}
       <header id="site-header">
         <div className="container">
           <div className="header-content">
@@ -116,9 +205,7 @@ function App() {
         </div>
       </header>
 
-      {/* Основной контент */}
       <main className="container" id="main">
-        {/* Список гиперссылок */}
         <section id="hyperlinks">
           <h2>Маркированный список гиперссылок</h2>
           <ul>
@@ -162,20 +249,20 @@ function App() {
           </p>
           <ul>
             <li><a href="https://github.com/Youminava">На фрагмент стороннего сайта</a></li>
-           <li>
-  ссылки из областей картинки (map):<br />
-  <img
-  src="/map.svg"  // Теперь правильный путь
-  alt="карта изображения"
-  width="320"
-  height="160"
-  useMap="#m"
-/>
-<map name="m">
-  <area shape="rect" coords="20,20,140,80" href="https://kubsu.ru" alt="Переход на kubsu.ru" />
-  <area shape="circle" coords="230,80,36" href="https://developer.mozilla.org/" alt="Переход на MDN" />
-</map>
-</li>
+            <li>
+              ссылки из областей картинки (map):<br />
+              <img
+                src="/map.svg"
+                alt="карта изображения"
+                width="320"
+                height="160"
+                useMap="#m"
+              />
+              <map name="m">
+                <area shape="rect" coords="20,20,140,80" href="https://kubsu.ru" alt="Переход на kubsu.ru" />
+                <area shape="circle" coords="230,80,36" href="https://developer.mozilla.org/" alt="Переход на MDN" />
+              </map>
+            </li>
             <li><a href="">Пустая ссылка</a></li>
             <li>Ссылка без href</li>
             <li><a href="https://kubsu.ru/" rel="nofollow">КубГУ (запрещен переход поисковикам)</a></li>
@@ -198,7 +285,6 @@ function App() {
           </li>
         </section>
 
-        {/* Таблица */}
         <section id="table-section">
           <h2>Таблица с информацией</h2>
           <table className="data-table">
@@ -222,45 +308,79 @@ function App() {
           </table>
         </section>
 
-        {/* Калькулятор стоимости заказа */}
         <section id="calculator">
-          <h2>Калькулятор стоимости заказа</h2>
+          <h2>Калькулятор стоимости услуги</h2>
           <div id="calculator-container">
-            <form id="order-form">
+            <form id="service-form" className="calculator-form">
               <div className="form-group">
-                <label htmlFor="product">Выберите товар:</label>
-                <select id="product" name="product" required>
-                  <option value="">-- Выберите товар --</option>
-                  <option value="1000">Ноутбук - 1000 руб.</option>
-                  <option value="500">Смартфон - 500 руб.</option>
-                  <option value="300">Наушники - 300 руб.</option>
-                  <option value="200">Клавиатура - 200 руб.</option>
-                </select>
+                <label className="form-label">Тип услуги:</label>
+                <div className="radio-group-cards">
+                  <label className="radio-card">
+                    <input type="radio" name="service-type" value="basic" defaultChecked />
+                    <div className="radio-content">
+                      <div className="radio-title">Базовая услуга</div>
+                      <div className="radio-price">1000 руб./шт</div>
+                    </div>
+                  </label>
+                  <label className="radio-card">
+                    <input type="radio" name="service-type" value="premium" />
+                    <div className="radio-content">
+                      <div className="radio-title">Премиум услуга</div>
+                      <div className="radio-price">2000 руб./шт</div>
+                    </div>
+                  </label>
+                  <label className="radio-card">
+                    <input type="radio" name="service-type" value="custom" />
+                    <div className="radio-content">
+                      <div className="radio-title">Кастомная услуга</div>
+                      <div className="radio-price">1500 руб./шт</div>
+                    </div>
+                  </label>
+                </div>
               </div>
               
               <div className="form-group">
-                <label htmlFor="quantity">Количество товара:</label>
+                <label htmlFor="quantity" className="form-label">Количество:</label>
                 <input 
-                  type="text" 
+                  type="number" 
                   id="quantity" 
                   name="quantity" 
-                  placeholder="Введите количество"
+                  min="1" 
+                  max="1000"
+                  defaultValue="1"
+                  className="form-input"
                   required
                 />
                 <div id="quantity-error" className="error-message"></div>
               </div>
               
-              <button type="button" id="calculate-btn">Рассчитать стоимость</button>
+              <div className="form-group dynamic-field" id="options-group" style={{display: 'none'}}>
+                <label htmlFor="service-option" className="form-label">Опция услуги:</label>
+                <select id="service-option" name="service-option" className="form-select">
+                  <option value="standard">Стандартная опция (+0 руб.)</option>
+                  <option value="advanced">Продвинутая опция (+500 руб.)</option>
+                  <option value="professional">Профессиональная опция (+1000 руб.)</option>
+                </select>
+              </div>
               
-              <div className="form-group">
-                <label>Стоимость заказа:</label>
-                <div id="total-cost" className="total-cost">0 руб.</div>
+              <div className="form-group dynamic-field" id="properties-group" style={{display: 'none'}}>
+                <label className="checkbox-card">
+                  <input type="checkbox" id="service-property" name="service-property" />
+                  <div className="checkbox-content">
+                    <div className="checkbox-title">Дополнительное свойство</div>
+                    <div className="checkbox-price">+300 руб. к заказу</div>
+                  </div>
+                </label>
+              </div>
+              
+              <div className="form-group total-group">
+                <label className="form-label">Общая стоимость:</label>
+                <div id="total-cost" className="total-cost-display">0 руб.</div>
               </div>
             </form>
           </div>
         </section>
 
-        {/* Форма */}
         <section id="forma">
           <h2>Форма регистрации</h2>
           <form>
@@ -318,7 +438,6 @@ function App() {
         </section>
       </main>
 
-      {/* Подвал */}
       <footer id="site-footer">
         <div className="container">
           <p>© Ущаповский Кирилл</p>

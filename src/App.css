@@ -156,79 +156,338 @@ section h2 {
 
 /* ====== Стили для калькулятора ====== */
 #calculator-container {
-    max-width: 500px;
+    max-width: 600px;
     margin: 0 auto;
 }
 
+.calculator-form {
+    background: white;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e1e8ff;
+}
+
 .form-group {
-    margin-bottom: 20px;
+    margin-bottom: 25px;
 }
 
-.form-group label {
+.form-label {
     display: block;
-    margin-bottom: 8px;
-    font-weight: bold;
+    margin-bottom: 10px;
+    font-weight: 600;
     color: #2f66b3;
-}
-
-.form-group select,
-.form-group input {
-    width: 100%;
-    padding: 10px;
-    border: 2px solid #2f66b3;
-    border-radius: 4px;
     font-size: 16px;
-    background: white;
 }
 
-.form-group select:focus,
-.form-group input:focus {
-    outline: none;
-    border-color: #1f4a85;
-    box-shadow: 0 0 5px rgba(31, 74, 133, 0.3);
+/* Стили для карточек радиокнопок */
+.radio-group-cards {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
 }
 
-#calculate-btn {
-    background: #2f66b3;
-    color: white;
-    border: none;
-    padding: 12px 24px;
-    font-size: 16px;
-    font-weight: bold;
-    border-radius: 4px;
+.radio-card {
+    display: block;
+    padding: 0;
+    border: 2px solid #e1e8ff;
+    border-radius: 10px;
     cursor: pointer;
-    width: 100%;
-    transition: background 0.3s;
-    margin-bottom: 20px;
-}
-
-#calculate-btn:hover {
-    background: #1f4a85;
-}
-
-.total-cost {
-    font-size: 24px;
-    font-weight: bold;
-    color: #2f66b3;
-    text-align: center;
-    padding: 15px;
+    transition: all 0.3s ease;
     background: white;
-    border: 2px solid #2f66b3;
-    border-radius: 4px;
-    margin-top: 10px;
+    position: relative;
+    overflow: hidden;
 }
 
-.error-message {
-    color: #d32f2f;
+.radio-card:hover {
+    border-color: #2f66b3;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(47, 102, 179, 0.15);
+}
+
+.radio-card input[type="radio"] {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.radio-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 18px 20px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.radio-text {
+    flex: 1;
+}
+
+.radio-title {
+    font-weight: 600;
+    color: #333;
+    font-size: 15px;
+    margin-bottom: 4px;
+}
+
+.radio-price {
+    color: #2f66b3;
+    font-weight: 600;
     font-size: 14px;
-    margin-top: 5px;
+}
+
+.radio-check {
+    width: 20px;
+    height: 20px;
+    border: 2px solid #e1e8ff;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 15px;
+    flex-shrink: 0;
+}
+
+.check-icon {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #2f66b3;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.radio-card input[type="radio"]:checked + .radio-content {
+    background: #f8faff;
+}
+
+.radio-card input[type="radio"]:checked + .radio-content .radio-check {
+    border-color: #2f66b3;
+    background: #2f66b3;
+}
+
+.radio-card input[type="radio"]:checked + .radio-content .check-icon {
+    opacity: 1;
+    background: white;
+}
+
+/* Поля ввода */
+.form-input, .form-select {
+    width: 100%;
+    padding: 12px 15px;
+    border: 2px solid #e1e8ff;
+    border-radius: 8px;
+    font-size: 16px;
+    background: white;
+    transition: all 0.3s ease;
+    color: #333;
+    box-sizing: border-box;
+}
+
+.form-input:focus, .form-select:focus {
+    outline: none;
+    border-color: #2f66b3;
+    box-shadow: 0 0 0 3px rgba(47, 102, 179, 0.1);
+}
+
+/* Чекбокс-карточка */
+.checkbox-card {
+    display: flex;
+    align-items: center;
+    padding: 18px 20px;
+    border: 2px solid #e1e8ff;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background: white;
+    position: relative;
+}
+
+.checkbox-card:hover {
+    border-color: #2f66b3;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(47, 102, 179, 0.15);
+}
+
+.checkbox-custom {
+    width: 20px;
+    height: 20px;
+    border: 2px solid #e1e8ff;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 15px;
+    flex-shrink: 0;
+}
+
+.checkbox-custom::after {
+    content: '✓';
+    color: white;
+    font-size: 14px;
+    font-weight: bold;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.checkbox-card input[type="checkbox"] {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.checkbox-card input[type="checkbox"]:checked + .checkbox-custom {
+    background: #2f66b3;
+    border-color: #2f66b3;
+}
+
+.checkbox-card input[type="checkbox"]:checked + .checkbox-custom::after {
+    opacity: 1;
+}
+
+.checkbox-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+.checkbox-title {
+    font-weight: 600;
+    color: #333;
+    font-size: 15px;
+}
+
+.checkbox-price {
+    color: #27ae60;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+/* Общая стоимость */
+.total-group {
+    text-align: center;
+    padding: 25px;
+    background: linear-gradient(135deg, #2f66b3 0%, #1f4a85 100%);
+    border-radius: 10px;
+    margin-top: 20px;
+}
+
+.total-group .form-label {
+    color: white;
+    margin-bottom: 15px;
+    font-size: 18px;
+}
+
+.total-cost-display {
+    font-size: 32px;
+    font-weight: bold;
+    color: white;
+    transition: all 0.3s ease;
+}
+
+.total-cost-display.pulse {
+    animation: pulse 0.3s ease-in-out;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+/* Сообщение об ошибке */
+.error-message {
+    color: #e74c3c;
+    font-size: 14px;
+    margin-top: 8px;
     display: none;
+    font-weight: 500;
 }
 
 .error-message.show {
     display: block;
 }
 
+/* Динамические поля */
+.dynamic-field {
+    animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Адаптивность для калькулятора */
+@media screen and (max-width: 768px) {
+    .calculator-form {
+        padding: 20px;
+        margin: 0 10px;
+    }
+    
+    .radio-card, .checkbox-card {
+        padding: 15px;
+    }
+    
+    .radio-content, .checkbox-content {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
+    
+    .radio-check {
+        margin-left: 0;
+        margin-top: 8px;
+        align-self: flex-start;
+    }
+    
+    .checkbox-custom {
+        margin-right: 12px;
+    }
+    
+    .total-cost-display {
+        font-size: 28px;
+    }
+    
+    .radio-title, .checkbox-title {
+        font-size: 14px;
+    }
+    
+    .radio-price, .checkbox-price {
+        font-size: 13px;
+    }
+}
+
+@media screen and (min-width: 769px) {
+    .radio-group-cards {
+        flex-direction: row;
+    }
+    
+    .radio-card {
+        flex: 1;
+    }
+    
+    .radio-content {
+        flex-direction: row;
+    }
+    
+    .radio-check {
+        margin-left: 15px;
+        margin-top: 0;
+    }
+}
 /* ====== Списки ====== */
 ul, ol {
     padding-left: 20px;
