@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
+import Gallery from "./Gallery";
 import "./App.css";
-
 function App() {
   useEffect(() => {
     const initCalculator = () => {
@@ -196,6 +196,7 @@ function App() {
           </div>
           <nav className="main-menu">
             <ul>
+              <li><a href="#gallery">Галерея</a></li>
               <li><a href="#table-section">Таблица</a></li>
               <li><a href="#forma">Форма</a></li>
               <li><a href="#calculator">Калькулятор</a></li>
@@ -206,6 +207,10 @@ function App() {
       </header>
 
       <main className="container" id="main">
+         <section id="gallery">
+          <h2>Галерея изображений</h2>
+          <Gallery />
+        </section>
         <section id="hyperlinks">
           <h2>Маркированный список гиперссылок</h2>
           <ul>
