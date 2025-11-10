@@ -38,21 +38,16 @@ function App() {
   if (serviceOption) serviceOption.value = 'standard';
   if (serviceProperty) serviceProperty.checked = false;
   
-  // Сначала скрываем все динамические поля
   if (optionsGroup) optionsGroup.style.display = 'none';
   if (propertiesGroup) propertiesGroup.style.display = 'none';
   
-  // Показываем нужные поля в зависимости от типа услуги
   switch(selectedServiceType) {
     case 'basic':
-      // Оба поля остаются скрытыми
       break;
     case 'premium':
-      // Только селект опций
       if (optionsGroup) optionsGroup.style.display = 'block';
       break;
     case 'custom':
-      // Только чекбокс свойства
       if (propertiesGroup) propertiesGroup.style.display = 'block';
       break;
   }

@@ -3,7 +3,6 @@ import "./App.css";
 
 function App() {
   useEffect(() => {
-    // ... существующий код калькулятора без изменений ...
     const initCalculator = () => {
       const serviceTypeRadios = document.querySelectorAll('input[name="service-type"]');
       const quantityInput = document.getElementById('quantity');
@@ -33,20 +32,16 @@ function App() {
 
       const propertyModifier = 300;
 
-// calculator.js - исправленная функция updateDynamicFields
 
 function updateDynamicFields() {
     const selectedServiceType = getSelectedServiceType();
     
-    // Сбрасываем значения
     if (serviceOption) serviceOption.value = 'standard';
     if (serviceProperty) serviceProperty.checked = false;
     
-    // Сначала скрываем все динамические поля
     if (optionsGroup) optionsGroup.style.display = 'none';
     if (propertiesGroup) propertiesGroup.style.display = 'none';
     
-    // Показываем/скрываем поля в зависимости от типа услуги
     switch(selectedServiceType) {
         case 'basic':
             // Базовый тип - нет дополнительных опций и свойств
@@ -159,7 +154,7 @@ function updateDynamicFields() {
 
   return (
     <div>
-      {/* ... существующий код header, main, других секций ... */}
+      {}
       
       {/* ОБНОВЛЕННАЯ СЕКЦИЯ КАЛЬКУЛЯТОРА */}
       <section id="calculator">
@@ -251,7 +246,7 @@ function updateDynamicFields() {
         </div>
       </section>
 
-      {/* ... остальной существующий код ... */}
+      {}
     </div>
   );
 }
