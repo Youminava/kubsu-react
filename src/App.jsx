@@ -1,7 +1,39 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Gallery from "./Gallery";
 import "./App.css";
+import FeedbackModal from "./FeedbackModal";
 function App() {
+  const [isFeedbackOpen, setIsFeedbackOpen] = useState(false);
+
+  // History API integration for modal state
+  useEffect(() => {
+    const syncFromUrl = () => {
+      const params = new URLSearchParams(window.location.search);
+      setIsFeedbackOpen(params.get("feedback") === "1");
+    };
+    syncFromUrl();
+
+    const onPop = () => syncFromUrl();
+    window.addEventListener("popstate", onPop);
+    return () => window.removeEventListener("popstate", onPop);
+  }, []);
+
+  const openFeedback = () => {
+    const url = new URL(window.location.href);
+    url.searchParams.set("feedback", "1");
+    window.history.pushState({ feedback: true }, "", url);
+    setIsFeedbackOpen(true);
+  };
+
+  const closeFeedback = () => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("feedback") === "1") {
+      // возврат к предыдущему состоянию истории
+      window.history.back();
+    } else {
+      setIsFeedbackOpen(false);
+    }
+  };
   useEffect(() => {
     const initCalculator = () => {
       const serviceTypeRadios = document.querySelectorAll('input[name="service-type"]');
@@ -198,6 +230,11 @@ function App() {
               <li><a href="#main">Главная</a></li>
             </ul>
           </nav>
+          <div className="feedback-cta">
+            <button type="button" className="btn" onClick={openFeedback}>
+              Обратная связь
+            </button>
+          </div>
         </div>
       </header>
 
@@ -443,6 +480,8 @@ function App() {
           <p>© Ущаповский Кирилл</p>
         </div>
       </footer>
+
+      <FeedbackModal open={isFeedbackOpen} onRequestClose={closeFeedback} />
     </div>
   );
 }

@@ -31,7 +31,7 @@ const Gallery = () => {
   };
 
   return (
-    <div style={{ width: "80%", margin: "0 auto", padding: "40px 0" }}>
+    <div style={{ width: "100%", margin: "0 auto", padding: "16px 0" }}>
       <Slider {...settings}>
         {images.map((src, index) => (
           <div key={index}>
